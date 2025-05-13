@@ -18,7 +18,7 @@ const Body = () => {
       return
     }
     try {
-      const user = await axios.get('http://localhost:3000/api/profile', {
+      const user = await axios.get('http://localhost:3000/profile', {
         withCredentials: true,
       })
       dispatch(addUser(user.data))
