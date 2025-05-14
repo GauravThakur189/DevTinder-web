@@ -6,11 +6,11 @@ import { addFeed } from "./feedSlice";
 import UserCard from "./UserCard";
 
 const Feed = () => {
-  const feed = useSelector((state) => state.feed);
+  const feeds = useSelector((state) => state.feed);
   const dispatch = useDispatch();
-  console.log("feed", feed);
+  console.log("feed", feeds);
   const fetchFeed = async () => {
-    if (feed && feed.length>0) return;
+    if (feeds && feeds.length>0) return;
     try {
       const resonse = await axios.get("http://localhost:3000/feed", {
         withCredentials: true,
@@ -26,10 +26,24 @@ const Feed = () => {
     fetchFeed();
   }, []);
 
- return feed.length > 0 ? (
-    <UserCard user={feed[0]} />
+ return (
+  <>
+  {feeds && feeds.length > 0 ? (
+    <>
+      <div className="flex flex-col items-center gap-4 p-4 pb-2 text-2xl m-5  tracking-wide">
+        {feeds.map((user) => (
+          <UserCard key={user._id} user={user} />
+        ))}
+      </div>
+
+      {/* You can render the first feed separately if needed
+      <UserCard user={feeds[0]} /> */}
+    </>
   ) : (
     <p>Loading...</p>
-  );
-};
+  )}
+</>
+ )
+ 
+} ;
 export default Feed;
