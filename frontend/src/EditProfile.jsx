@@ -8,10 +8,10 @@ const EditProfile = ({user}) => {
     const dispatch = useDispatch()
     const [firstName, setFirstName] = React.useState(user.firstName)
     const [lastName, setLastName] = React.useState(user.lastName)
-    const [age, setAge] = React.useState(user.age)
-    const [photoUrl, setPhotoUrl] = React.useState(user.photoUrl)
-    const [gender, setGender] = React.useState(user.gender)
-    const [about, setAbout] = React.useState(user.about)
+    const [age, setAge] = React.useState(user.age || '')
+    const [photoUrl, setPhotoUrl] = React.useState(user.photoUrl || '')
+    const [gender, setGender] = React.useState(user.gender || '')
+    const [about, setAbout] = React.useState(user.about   || '')
     const saaveProfile = async()=>{
         try {
          const response  = await axios.patch('http://localhost:3000/edit/profile',{
@@ -63,7 +63,7 @@ const EditProfile = ({user}) => {
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Age</legend>
             <input 
-              type="number" 
+              type="text" 
                value={age}
               className="input" 
               placeholder="Type here"

@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
            <div className="navbar bg-base-300 shadow-sm">
   <div className="flex-1">
-    <Link to="/"  className="btn btn-ghost text-xl">daisyUI</Link>
+    <Link to="/"  className="btn btn-ghost text-xl">Commit2Connect</Link>
   </div>
   {user && (<div className="flex gap-2">
     <p  className=" mx-1 input-bordered w-24 md:w-auto">Welcome, {user.firstName}</p>
@@ -35,7 +35,7 @@ const Navbar = () => {
         <div className="w-10 rounded-full">
           <img
             alt="Tailwind CSS Navbar component"
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            src={user.photoUrl} />
         </div>
       </div>
       <ul

@@ -26,24 +26,19 @@ const Feed = () => {
     fetchFeed();
   }, []);
 
- return (
-  <>
-  {feeds && feeds.length > 0 ? (
-    <>
-      <div className="flex flex-col items-center gap-4 p-4 pb-2 text-2xl m-5  tracking-wide">
-        {feeds.map((user) => (
-          <UserCard key={user._id} user={user} />
-        ))}
-      </div>
+ if (!feeds) return 
+ 
+if(feeds.length === 0 || feeds.length<0) return <div className=" flex items-center justify-center p-4 pb-2 text-2xl opacity-60 tracking-wide">No New Users Found</div>
 
-      {/* You can render the first feed separately if needed
-      <UserCard user={feeds[0]} /> */}
-    </>
+return (
+  feeds  ? (
+    <div className="flex items-center m-10">
+    <UserCard user={feeds[0]}/></div>
   ) : (
     <p>Loading...</p>
-  )}
-</>
- )
+  )
+);
  
+
 } ;
 export default Feed;
