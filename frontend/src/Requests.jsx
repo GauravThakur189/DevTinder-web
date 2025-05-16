@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequest } from "./requestSlice";
+import { addRequest, removeRequest } from "./requestSlice";
 
 const Requests = () => {
   const dispatch = useDispatch();
-  const requests = useSelector((store) => store.request);
+  const requests = useSelector((store) => store.requests);
   console.log("requests", requests);
 
   const hadleRequest = async(status,id) => {
@@ -15,6 +15,7 @@ const Requests = () => {
     withCredentials:true
    }) 
    console.log("request response",response.data);
+      dispatch(removeRequest(id));
     } catch (error) {
         console.log("error in accepting or rejecting request",error);
         
@@ -22,23 +23,25 @@ const Requests = () => {
    
   }
 
-  const showRequests = async () => {
+  const showRequests = async () => { 
     try {
       const response = await axios.get(
         "http://localhost:3000/user/request/received",
         { withCredentials: true }
       );
-      console.log("request response", response.data._id);
+      console.log("request response", response.data);
       dispatch(addRequest(response.data.data));
     } catch (error) {
       console.error(error);
-    }
+    }  
   };
 
   useEffect(() => {
     showRequests();
   }, []);
 
+  if (!requests) return;
+  if (requests.length === 0) return <h1>No requests found</h1>
   return (
     <div>
       {requests.length> 0 ? <div className="p-4 pb-2 text-2xl opacity-60 tracking-wide">
@@ -47,7 +50,7 @@ const Requests = () => {
          Request not found !
       </div> }
       {requests.map((request) => {
-        const { firstName, lastName, about, _id } = request;
+        const { firstName, lastName, about, _id,photoUrl } = request.fromUserId;
         return (
           <ul
             key={_id}
@@ -56,7 +59,7 @@ const Requests = () => {
             <li className="list-row flex items-center gap-4 p-3">
               <img
                 className="size-10 rounded-box"
-                src="https://img.daisyui.com/images/profile/demo/3@94.webp"
+                src={photoUrl}
               />
               <div>
                 <div>{firstName + " " + lastName}</div>

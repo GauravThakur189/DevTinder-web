@@ -10,7 +10,7 @@ const appStore = configureStore({
         user: userReducer,
         feed: feedReducer,
         connections: connectionReducer,
-        request: requestReducer,
+        requests: requestReducer,
 
     },
 })
