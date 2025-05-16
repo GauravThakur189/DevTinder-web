@@ -8,7 +8,7 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const feeds = useSelector((state) => state.feed);
   const dispatch = useDispatch();
-  console.log("feed", feeds);
+ 
   const fetchFeed = async () => {
     if (feeds && feeds.length>0) return;
     try {
@@ -16,7 +16,7 @@ const Feed = () => {
         withCredentials: true,
       });
       dispatch(addFeed(resonse.data));
-      console.log("feed daya", resonse.data);
+     // console.log("feed daya", resonse.data);
     } catch (error) {
       console.error("Error fetching feed:", error);
     }

@@ -12,7 +12,7 @@ const UserCard = ({user}) => {
           const response = await axios.post('http://localhost:3000/request/send/'+status+ '/' + userId, {},{
             withCredentials:true,
           })
-          console.log("Response from server:", response.data);
+          //console.log("Response from server:", response.data);
           dispatch(removeUserFromFeed(userId))
       } catch (error) {
         console.error("Error sending request:", error);

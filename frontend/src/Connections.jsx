@@ -6,7 +6,7 @@ import { addConnection } from './connectionSlice'
 
 const Connections = () => {
   const connections = useSelector((store) => store.connections)
-  console.log("connections", connections);
+ 
   
   const dispatch = useDispatch()
     const fetchConnections = async()=>{
@@ -16,7 +16,7 @@ const Connections = () => {
       })
       
       
-      console.log("connection response data",response.data.data)
+     // console.log("connection response data",response.data.data)
       dispatch(addConnection(response.data.data))
         } catch (error) {
           console.error(" Error fetching connections:", error);
@@ -102,10 +102,7 @@ return (
                   {about}
                 </div>
               </div>
-              {/* <div className="ml-auto flex gap-2">
-                <button className="btn btn-soft btn-error" onClick={()=>hadleRequest("rejected",request._id)}>Reject</button>
-                <button className="btn btn-soft btn-accent" onClick={()=> hadleRequest("accepted",request._id)}>Accept</button>
-              </div> */}
+              
             </li>
           </ul>
         );

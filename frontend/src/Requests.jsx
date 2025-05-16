@@ -6,7 +6,7 @@ import { addRequest, removeRequest } from "./requestSlice";
 const Requests = () => {
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.requests);
-  console.log("requests", requests);
+  //console.log("requests", requests);
 
   const hadleRequest = async(status,id) => {
     try {
@@ -14,7 +14,7 @@ const Requests = () => {
        const response = await axios.post(api,{},{
     withCredentials:true
    }) 
-   console.log("request response",response.data);
+   //console.log("request response",response.data);
       dispatch(removeRequest(id));
     } catch (error) {
         console.log("error in accepting or rejecting request",error);
@@ -29,7 +29,7 @@ const Requests = () => {
         "http://localhost:3000/user/request/received",
         { withCredentials: true }
       );
-      console.log("request response", response.data);
+      //console.log("request response", response.data);
       dispatch(addRequest(response.data.data));
     } catch (error) {
       console.error(error);

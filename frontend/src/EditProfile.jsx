@@ -26,7 +26,7 @@ const EditProfile = ({ user }) => {
         },
         { withCredentials: true }
       );
-      console.log("response", response);
+     // console.log("response", response);
       dispatch(addUser(response?.data?.data));
     } catch (error) {
       console.log("error", error);
