@@ -1,8 +1,6 @@
 import React from "react"
-import Navbar from "./Navbar"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Body from "./Body"
-import Footer from "./Footer"
 import Login from "./Login"
 import Profile from "./Profile"
 import {Provider} from 'react-redux'
