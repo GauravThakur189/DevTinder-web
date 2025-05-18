@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addConnection } from './connectionSlice'
+import { Link } from 'react-router-dom'
 
 const Connections = () => {
   const connections = useSelector((store) => store.connections)
@@ -102,7 +103,9 @@ return (
                   {about}
                 </div>
               </div>
-              
+              <button className="btn btn-primary btn-sm ml-auto">
+                <Link to={`/chat/${_id}`}>Message</Link>
+              </button>
             </li>
           </ul>
         );

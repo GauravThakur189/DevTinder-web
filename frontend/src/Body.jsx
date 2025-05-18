@@ -21,7 +21,7 @@ const Body = () => {
       const user = await axios.get('http://localhost:3000/profile', {
         withCredentials: true,
       })
-      console.log('user ssignup  data', user.data);
+     // console.log('user ssignup  data', user.data);
       
       dispatch(addUser(user.data))
     } catch (error) {
