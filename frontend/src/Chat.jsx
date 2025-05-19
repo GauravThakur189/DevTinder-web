@@ -2,27 +2,44 @@ import React from 'react'
 import { useParams } from 'react-router'
 
 const Chat = () => {
-  const {targetUserId} = useParams();
+  const { targetUserId } = useParams();
   console.log("targetUserId", targetUserId);
-  
-    return (
-    <>
-    <h1 className="text-2xl font-bold text-center text-gray-600 mt-4 border-b border-gray-600 ">Chat</h1>
-    <div className="chat chat-start mt-10">
-  <div className="chat-bubble">
-    It's over Anakin,
-    <br />
-    I have the high ground.
-  </div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-bubble">You underestimate my power!</div>
-</div>
-</>
+
+  return (
+    <div className="w-1/2 mx-auto bg-gray-800 rounded-lg shadow-lg p-6 mt-10 flex flex-col h-[80vh]">
+      <h1 className="text-2xl font-bold text-center text-gray-300 mb-4 border-b border-gray-600 pb-2">Chat</h1>
+      
+      {/* Chat messages */}
+      <div className="flex-1 overflow-y-auto space-y-4">
+        <div className="chat chat-start">
+          <div className="chat-bubble bg-gray-700 text-white">
+            It's over Anakin,
+            <br />
+            I have the high ground.
+          </div>
+        </div>
+        <div className="chat chat-end">
+          <div className="chat-bubble bg-blue-600 text-white">
+            You underestimate my power!
+          </div>
+        </div>
+      </div>
+
+      {/* Input field & button */}
+      <div className="mt-4 flex items-center gap-2">
+        <input
+          type="text"
+          placeholder="Type a message"
+          className="input input-bordered w-full flex-1 bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
+        />
+        <button className="btn btn-primary">Send</button>
+      </div>
+    </div>
   )
 }
 
 export default Chat
+
 
 
 
