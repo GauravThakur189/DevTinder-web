@@ -1,55 +1,117 @@
-import React from 'react'
-import { useParams } from 'react-router'
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
+import { createSocketConnection } from "./utils/socket";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Chat = () => {
   const { targetUserId } = useParams();
-  console.log("targetUserId", targetUserId);
+ 
+  const user = useSelector((state) => state.user);
+  const [messages, setMessages] = React.useState([]);
+  const [newMessage, setNewMessage] = React.useState("");
+  const userId = user?._id;
+  const firstName = user?.firstName;
+
+  const chatMessages = async () => {
+    const messages = await axios.get(
+      `http://localhost:3000/chat/${targetUserId}`,
+      {
+        withCredentials: true,
+      }
+    );
+    
+    const chatMessage = messages?.data?.messages.map((message) => {
+      return {
+        firstName: message?.senderId?.firstName,
+        lastName: message?.senderId?.lastName,
+        text: message?.text,
+      };
+    });
+    setMessages(chatMessage);
+  };
+  useEffect(() => {
+    chatMessages();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+    const socket = createSocketConnection();
+    // as soon as the socket is created, the socket connection is made and joinChat event is emitted
+    socket.emit("joinChat", { firstName, userId, targetUserId });
+
+    socket.on("receiveMessage", ({ firstName, lastName, text }) => {
+      
+      setMessages((preMessage) => [
+        ...preMessage,
+        { firstName, lastName, text },
+      ]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userId, targetUserId]);
+
+  const returnMessage = () => {
+    const socket = createSocketConnection();
+    socket.emit("sendMessage", {
+      firstName,
+      lastName: user.lastName,
+      userId,
+      targetUserId,
+      text: newMessage,
+    });
+    setNewMessage("");
+  };
 
   return (
     <div className="w-1/2 mx-auto bg-gray-800 rounded-lg shadow-lg p-6 mt-10 flex flex-col h-[80vh]">
-      <h1 className="text-2xl font-bold text-center text-gray-300 mb-4 border-b border-gray-600 pb-2">Chat</h1>
-      
-      {/* Chat messages */}
+      <h1 className="text-2xl font-bold text-center text-gray-300 mb-4 border-b border-gray-600 pb-2">
+        Chat
+      </h1>
       <div className="flex-1 overflow-y-auto space-y-4">
-        <div className="chat chat-start">
-          <div className="chat-bubble bg-gray-700 text-white">
-            It's over Anakin,
-            <br />
-            I have the high ground.
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`chat ${user.firstName === msg.firstName ? 'chat-end' : 'chat-start'}`}
+
+          >
+            <div className="chat-header">
+              {`${msg.firstName} ${msg.lastName}`}
+            </div>
+            <div className=" chat-bubble">{msg.text}</div>
           </div>
-        </div>
-        <div className="chat chat-end">
-          <div className="chat-bubble bg-blue-600 text-white">
-            You underestimate my power!
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Input field & button */}
       <div className="mt-4 flex items-center gap-2">
         <input
           type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message"
-          className="input input-bordered w-full flex-1 bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
+          className="input input-bordered w-full flex-1 bg-gray-500 text-white placeholder-gray-200 focus:outline-none"
         />
-        <button className="btn btn-primary">Send</button>
+        <button className="btn btn-primary" onClick={returnMessage}>
+          Send
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Chat
-
-
-
-
+export default Chat;
 
 // import React, { useState } from 'react';
 
 // const Chat = () => {
 //   const [activeChat, setActiveChat] = useState('anakin');
 //   const [newMessage, setNewMessage] = useState("");
-  
+
 //   // Sample friends data
 //   const friends = [
 //     { id: 'anakin', name: 'Anakin Skywalker', status: 'online', avatar: 'AS', unread: 2 },
@@ -58,7 +120,7 @@ export default Chat
 //     { id: 'padme', name: 'Padmé Amidala', status: 'online', avatar: 'PA', unread: 3 },
 //     { id: 'mace', name: 'Mace Windu', status: 'away', avatar: 'MW', unread: 0 },
 //   ];
-  
+
 //   // Chat message data by friend
 //   const chatMessages = {
 //     anakin: [
@@ -81,12 +143,12 @@ export default Chat
 //       { id: 1, text: "Take a seat, young Skywalker.", sender: "start" }
 //     ]
 //   };
-  
+
 //   const [messages, setMessages] = useState(chatMessages);
-  
+
 //   const handleSendMessage = () => {
 //     if (newMessage.trim() === "") return;
-    
+
 //     const updatedMessages = { ...messages };
 //     updatedMessages[activeChat] = [
 //       ...updatedMessages[activeChat],
@@ -96,10 +158,10 @@ export default Chat
 //         sender: "end"
 //       }
 //     ];
-    
+
 //     setMessages(updatedMessages);
 //     setNewMessage("");
-    
+
 //     // Simulate a response after a short delay
 //     setTimeout(() => {
 //       const responseMessages = { ...messages };
@@ -114,7 +176,7 @@ export default Chat
 //       setMessages(responseMessages);
 //     }, 1000);
 //   };
-  
+
 //   const getAutoResponse = (chatId) => {
 //     const responses = {
 //       anakin: "Don't try it!",
@@ -132,7 +194,7 @@ export default Chat
 //       handleSendMessage();
 //     }
 //   };
-  
+
 //   const getStatusColor = (status) => {
 //     switch(status) {
 //       case 'online': return 'bg-green-500';
@@ -148,14 +210,14 @@ export default Chat
 //         <div className="p-4 border-b border-gray-700">
 //           <h1 className="text-xl font-bold text-blue-400">Star Wars Chat</h1>
 //         </div>
-        
+
 //         {/* Friends list */}
 //         <div className="flex-grow overflow-y-auto">
 //           <div className="p-2">
 //             <h2 className="text-sm font-medium text-gray-400 p-2">FRIENDS</h2>
-            
+
 //             {friends.map((friend) => (
-//               <div 
+//               <div
 //                 key={friend.id}
 //                 onClick={() => setActiveChat(friend.id)}
 //                 className={`flex items-center p-3 rounded-lg cursor-pointer mb-1 ${
@@ -168,7 +230,7 @@ export default Chat
 //                     {friend.avatar}
 //                   </div>
 //                 </div>
-                
+
 //                 {/* Friend info */}
 //                 <div className="flex-grow">
 //                   <div className="flex justify-between">
@@ -188,7 +250,7 @@ export default Chat
 //             ))}
 //           </div>
 //         </div>
-        
+
 //         {/* User profile */}
 //         <div className="p-4 border-t border-gray-700 flex items-center">
 //           <div className="avatar placeholder mr-3">
@@ -205,7 +267,7 @@ export default Chat
 //           </div>
 //         </div>
 //       </div>
-      
+
 //       {/* Chat area */}
 //       <div className="flex-grow flex flex-col">
 //         {/* Chat header */}
@@ -225,26 +287,26 @@ export default Chat
 //             </div>
 //           </div>
 //         </div>
-        
+
 //         {/* Messages */}
 //         <div className="flex-grow p-6 overflow-y-auto bg-gray-900">
 //           <div className="flex flex-col space-y-4">
 //             {messages[activeChat].map((message) => (
-//               <div 
-//                 key={message.id} 
+//               <div
+//                 key={message.id}
 //                 className={`chat ${message.sender === "start" ? "chat-start" : "chat-end"}`}
 //               >
 //                 <div className="chat-image avatar placeholder">
 //                   <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center">
-//                     {message.sender === "start" 
-//                       ? friends.find(f => f.id === activeChat)?.avatar 
+//                     {message.sender === "start"
+//                       ? friends.find(f => f.id === activeChat)?.avatar
 //                       : "OW"}
 //                   </div>
 //                 </div>
-//                 <div 
+//                 <div
 //                   className={`chat-bubble p-3 rounded-lg max-w-xs md:max-w-md ${
-//                     message.sender === "start" 
-//                       ? "bg-gray-700 text-white" 
+//                     message.sender === "start"
+//                       ? "bg-gray-700 text-white"
 //                       : "bg-blue-600 text-white"
 //                   }`}
 //                 >
@@ -262,7 +324,7 @@ export default Chat
 //             ))}
 //           </div>
 //         </div>
-        
+
 //         {/* Message input */}
 //         <div className="p-4 border-t border-gray-700">
 //           <div className="flex bg-gray-800 rounded-lg">
