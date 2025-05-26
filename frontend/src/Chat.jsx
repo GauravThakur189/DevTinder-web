@@ -106,18 +106,7 @@ const Chat = () => {
 
 export default Chat;
 
-// import React, { useState } from 'react';
-
-// const Chat = () => {
-//   const [activeChat, setActiveChat] = useState('anakin');
-//   const [newMessage, setNewMessage] = useState("");
-
-//   // Sample friends data
-//   const friends = [
-//     { id: 'anakin', name: 'Anakin Skywalker', status: 'online', avatar: 'AS', unread: 2 },
-//     { id: 'obi', name: 'Obi-Wan Kenobi', status: 'online', avatar: 'OW', unread: 0 },
-//     { id: 'yoda', name: 'Master Yoda', status: 'offline', avatar: 'MY', unread: 0 },
-//     { id: 'padme', name: 'Padmé Amidala', status: 'online', avatar: 'PA', unread: 3 },
+ id: 'padme', name: 'Padmé Amidala', status: 'online', avatar: 'PA', unread: 3 },
 //     { id: 'mace', name: 'Mace Windu', status: 'away', avatar: 'MW', unread: 0 },
 //   ];
 
